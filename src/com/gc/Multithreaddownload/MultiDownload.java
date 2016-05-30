@@ -133,13 +133,13 @@ class DownloadThread extends Thread{
 					//每次读取流里数据之后，同步把数据写入临时文件
 					raf.write(b, 0, len);
 					total += len;
+					
+					//生成一个专门用来记录下载进度的临时文件
+					RandomAccessFile progressRaf = new RandomAccessFile(progressFile, "rwd");
+					//每次读取流里的数据后，同步把当前进程下载的总进度写进进度文件中
+					progressRaf.write((total + "").getBytes());
+					progressRaf.close();
 				}
-				
-				//生成一个专门用来记录下载进度的临时文件
-				RandomAccessFile progressRaf = new RandomAccessFile(progressFile, "rwd");
-				//每次读取流里的数据后，同步把当前进程下载的总进度写进进度文件中
-				progressRaf.write((total + "").getBytes());
-				progressRaf.close();
 				
 				System.out.println("线程" + threadId + "下载完毕");
 				raf.close();
